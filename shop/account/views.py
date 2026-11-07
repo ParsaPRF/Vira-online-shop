@@ -124,7 +124,7 @@ def verify_registration(request):
             return render(request, 'frontend/template/verify_registration.html', {'phone_number': phone_number})
         # بررسی انقضای کد
         from datetime import datetime
-        from utils.sms import is_verification_code_expired
+        from shop.utils.sms import is_verification_code_expired
         if code_created_at:
             code_created_at_dt = datetime.fromtimestamp(code_created_at)
             if is_verification_code_expired(code_created_at_dt):
@@ -264,7 +264,9 @@ def verify_code(request):
             # ورود کاربر
             profile.is_phone_verified = True
             profile.save()
-            login(request, profile.user)
+            login(request,
+                   profile.user,
+                   backend='django.contrib.auth.backends.ModelBackend')
             
             # پاک کردن کد تأیید پس از ورود موفق
             profile.verification_code = None
