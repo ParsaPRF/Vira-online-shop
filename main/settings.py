@@ -23,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-2$ps*%$q_juaz!&kcidd1k^3*qcum*5wc3!)3!kz72ulo!#*@&'
+SECRET_KEY = settings_instance.secret_key or 'django-insecure-2$ps*%$q_juaz!&kcidd1k^3*qcum*5wc3!)3!kz72ulo!#*@&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", True)
+DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
-ALLOWED_HOSTS = ["*",""]
+ALLOWED_HOSTS = settings_instance.allowed_hosts or ["*", ""]
 
 
 # Application definition
@@ -124,6 +124,10 @@ DATABASES = {
         'PORT': settings_instance.db_port,
     }
 }
+
+# SQLite مسیر فایل دیتابیس را نسبت به ریشه پروژه می‌خواهد (نه نسبت به پوشه اجرا)
+if settings_instance.db_engine.endswith('sqlite3'):
+    DATABASES['default']['NAME'] = str(BASE_DIR / settings_instance.db_name)
 
 
 # Password validation

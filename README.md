@@ -28,9 +28,9 @@ A comprehensive Django-based e-commerce platform with RTL (Right-to-Left) suppor
 ## 🛠 Technical Stack
 
 ### Core Technologies
-- Python 3.x
+- Python 3.13 (recommended; see the note in the setup section)
 - Django 4.2.x
-- MySQL Database
+- Database: SQLite for local development (MySQL/PostgreSQL supported via `.env`)
 
 ## 🚀 Installation & Setup
 
@@ -47,24 +47,40 @@ python -m venv venv
 source venv/bin/activate  # Linux/Mac
 ```
 
+> **Python version:** use Python 3.12 or 3.13. `pillow==11.0.0` has no wheel for
+> Python 3.14, so on 3.14 pip falls back to building Pillow from source and
+> fails with `The headers or library files could not be found for zlib`.
+
 3. **Install Dependencies**
 ```bash
-pip install -r freeze.txt
+pip install -r requirements.txt
 ```
 
-4. **Database Setup**
+4. **Environment & Database Setup**
 ```bash
-# Create MySQL database
-mysql -u root -p
-CREATE DATABASE shahan_shop CHARACTER SET utf8mb4;
-
-# Configure database in settings.py
-# Update DATABASES settings with your credentials
+# Create your local .env from the template and edit it
+copy .simple.env .env    # Windows
+cp .simple.env .env      # Linux/Mac
 ```
+The project runs on **SQLite by default** — no database server needed; the
+default `.env` already points at `db.sqlite3`, so just run the migrations.
+
+To use MySQL instead, set these keys in `.env` and create the database:
+```sql
+CREATE DATABASE shahan_shop CHARACTER SET utf8mb4;
+```
+```
+DB_ENGINE=django.db.backends.mysql
+DB_NAME=shahan_shop
+DB_USER=root
+DB_PASSWORD=your_password
+DB_HOST=127.0.0.1
+DB_PORT=3306
+```
+(For PostgreSQL, set `DB_ENGINE=django.db.backends.postgresql` and install `psycopg`.)
 
 5. **Run Migrations**
 ```bash
-python manage.py makemigrations
 python manage.py migrate
 ```
 
@@ -167,9 +183,9 @@ Vira Online Shop
 ## 🔧 Configuration
 
 Key configuration files:
-- `settings.py`: Main Django settings
-- `urls.py`: URL routing
-- `.env`: Environment variables (create from .env.example)
+- `main/settings.py`: Main Django settings
+- `main/urls.py`: URL routing
+- `.env`: Environment variables (create it from `.simple.env` with `copy .simple.env .env`)
 
 ## 📝 Contributing
 
